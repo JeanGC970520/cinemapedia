@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:cinemapedia/config/theme/app_theme.dart';
 import 'package:cinemapedia/config/router/app_router.dart';
 
-void main() {
+Future<void> main() async {
+  // First load environment variables and then run app
+  await dotenv.load(fileName: '.env');
   runApp(const MainApp());
 }
 
