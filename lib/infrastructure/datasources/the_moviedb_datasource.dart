@@ -16,17 +16,8 @@ class TheMovieDbDatasource extends MoviesDatasource {
     }
   ));
 
-  @override
-  Future<List<Movie>> getNowPLaying({int page = 1}) async {
-
-    final response = await dio.get(
-      '/movie/now_playing',
-      queryParameters: {
-        'page' : page,
-      }
-    );
-
-    final movieDBResponse = MovieDbResponse.fromMap(response.data);
+  List<Movie> _jsonToMovies( Map<String, dynamic> json ) {
+    final movieDBResponse = MovieDbResponse.fromMap(json);
     // the map() method convert tht moviedb model to my entity Movie
     // and the where() method filters the movies without a poster.
     final List<Movie> movies = movieDBResponse.results
@@ -37,5 +28,31 @@ class TheMovieDbDatasource extends MoviesDatasource {
     .toList();
 
     return movies;
+  }
+
+  @override
+  Future<List<Movie>> getNowPLaying({int page = 1}) async {
+
+    final response = await dio.get(
+      '/movie/now_playing',
+      queryParameters: {
+        'page' : page,
+      }
+    );
+
+    return _jsonToMovies(response.data);
+  }
+  
+  @override
+  Future<List<Movie>> getPopular({int page = 1}) async {
+    
+    final response = await dio.get(
+      '/movie/popular',
+      queryParameters: {
+        'page' : page,
+      }
+    );
+
+    return _jsonToMovies(response.data);
   }
 }
