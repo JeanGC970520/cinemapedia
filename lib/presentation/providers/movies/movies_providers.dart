@@ -16,6 +16,16 @@ final nowPlayingMoviesProvider = StateNotifierProvider<MoviesNotifier, List<Movi
   );
 });
 
+// * NOTE: Using the same StateNotifierProvider but with a different use cases
+final popularMoviesProvider = StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
+  
+  final fetchMoreMovies = ref.watch( movieRepositoryProvider ).getPopular;
+  
+  return MoviesNotifier(
+    fetchMoreMovies: fetchMoreMovies
+  );
+});
+
 // Defining function signature
 typedef MovieCallback = Future<List<Movie>> Function({ int page });
 
