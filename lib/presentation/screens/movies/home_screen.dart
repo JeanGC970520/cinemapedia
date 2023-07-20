@@ -42,7 +42,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   Widget build(BuildContext context) {
 
     // Accesing to the state of the StateNotifierProvider and listen changes
-    // final nowPlayingMovies = ref.watch( nowPlayingMoviesProvider );
+    final nowPlayingMovies = ref.watch( nowPlayingMoviesProvider );
 
     final slideShowMovies = ref.watch(moviesSlideshowProvider);
 
@@ -52,6 +52,12 @@ class _HomeViewState extends ConsumerState<_HomeView> {
         const CustomAppbar(),
 
         MoviesSlideshow(movies: slideShowMovies),
+
+        MovieHorizontalListview( 
+          movies: nowPlayingMovies,
+          title: 'En cines',
+          subTitle: 'Lunes 20',
+        ),
         
       ],
     );
