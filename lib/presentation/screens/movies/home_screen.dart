@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:cinemapedia/presentation/providers/movies/movies_providers.dart';
+import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:cinemapedia/presentation/widgets/widgets.dart';
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -40,14 +41,16 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   Widget build(BuildContext context) {
 
     // Accesing to the state of the StateNotifierProvider and listen changes
-    final nowPlayingMovies = ref.watch( nowPlayingMoviesProvider );
+    // final nowPlayingMovies = ref.watch( nowPlayingMoviesProvider );
+
+    final slideShowMovies = ref.watch(moviesSlideshowProvider);
 
     return Column(
       children: [
 
         const CustomAppbar(),
 
-        MoviesSlideshow(movies: nowPlayingMovies),
+        MoviesSlideshow(movies: slideShowMovies),
         
       ],
     );
