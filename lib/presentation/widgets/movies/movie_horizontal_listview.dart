@@ -5,6 +5,8 @@ import 'package:animate_do/animate_do.dart';
 
 import 'package:cinemapedia/domain/entities/movie.dart';
 
+import '../../../config/helpers/human_formats.dart';
+
 class MovieHorizontalListview extends StatelessWidget {
   const MovieHorizontalListview({
     super.key, 
@@ -113,7 +115,7 @@ class _Slide extends StatelessWidget {
               ),
               const SizedBox(width: 10,),
               Text(
-                '${movie.popularity}',
+                HumanFortmats.number(movie.popularity),
                 style: textStyles.bodySmall,
               ),
             ],
