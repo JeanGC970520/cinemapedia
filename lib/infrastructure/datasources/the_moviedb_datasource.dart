@@ -27,13 +27,14 @@ class TheMovieDbDatasource extends MoviesDatasource {
     );
 
     final movieDBResponse = MovieDbResponse.fromMap(response.data);
-    // the where() method filters the moviedb where it has no poster 
-    // and doesn't use it to pass it to the map() method 
+    // the map() method convert tht moviedb model to my entity Movie
+    // and the where() method filters the movies without a poster.
     final List<Movie> movies = movieDBResponse.results
-    .where((moviedb) => moviedb.posterPath != 'no-poster')
     .map(
       (moviedb) => MovieMapper.movieDBToEntity(moviedb)
-    ).toList();
+    )
+    .where((moviedb) => moviedb.posterPath != 'no-poster')
+    .toList();
 
     return movies;
   }
