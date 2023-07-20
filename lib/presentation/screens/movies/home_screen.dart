@@ -46,23 +46,77 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
     final slideShowMovies = ref.watch(moviesSlideshowProvider);
 
-    return Column(
-      children: [
+    return CustomScrollView(
+      slivers: [
 
-        const CustomAppbar(),
-
-        MoviesSlideshow(movies: slideShowMovies),
-
-        MovieHorizontalListview( 
-          movies: nowPlayingMovies,
-          title: 'En cines',
-          subTitle: 'Lunes 20',
-          loadNextPage: () {
-            ref.read( nowPlayingMoviesProvider.notifier ).loadNextPage();
-          },
+        const SliverAppBar(
+          floating: true,
+          flexibleSpace: FlexibleSpaceBar(
+            // * NOTE: It seems that when using the FlexibleSpaceBar, 
+            // *       the title property comes with a default padding.
+            // *       So, I remove it to display my CustomAppbar widget
+            // centerTitle: true,
+            titlePadding: EdgeInsets.zero,
+            title: CustomAppbar(),
+          ),
         ),
-        
-      ],
+
+        // * Used the SliverList like a special container to display the 
+        // * content inside of CustomScrollView.
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return Column(
+                children: [
+            
+                  // const CustomAppbar(),
+            
+                  MoviesSlideshow(movies: slideShowMovies),
+            
+                  MovieHorizontalListview( 
+                    movies: nowPlayingMovies,
+                    title: 'En cines',
+                    subTitle: 'Lunes 20',
+                    loadNextPage: () {
+                      ref.read( nowPlayingMoviesProvider.notifier ).loadNextPage();
+                    },
+                  ),
+            
+                  MovieHorizontalListview( 
+                    movies: nowPlayingMovies,
+                    title: 'Proximamente',
+                    subTitle: 'En este mes',
+                    loadNextPage: () {
+                      ref.read( nowPlayingMoviesProvider.notifier ).loadNextPage();
+                    },
+                  ),
+            
+                  MovieHorizontalListview( 
+                    movies: nowPlayingMovies,
+                    title: 'Populares',
+                    // subTitle: 'En este mes',
+                    loadNextPage: () {
+                      ref.read( nowPlayingMoviesProvider.notifier ).loadNextPage();
+                    },
+                  ),
+            
+                  MovieHorizontalListview( 
+                    movies: nowPlayingMovies,
+                    title: 'Mejor calificadas',
+                    subTitle: 'Desde siempre',
+                    loadNextPage: () {
+                      ref.read( nowPlayingMoviesProvider.notifier ).loadNextPage();
+                    },
+                  ),
+                  
+                ],
+              );
+            },
+            childCount: 1,
+          ),
+        ),
+
+      ]
     );
   }
 }
