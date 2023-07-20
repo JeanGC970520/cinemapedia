@@ -37,6 +37,8 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     // Accesing to the notifier(controller) of the StateNotifierProvider
     ref.read( nowPlayingMoviesProvider.notifier ).loadNextPage();
     ref.read( popularMoviesProvider.notifier ).loadNextPage();
+    ref.read( topRatedMoviesProvider.notifier ).loadNextPage();
+    ref.read( upcomingMoviesProvider.notifier ).loadNextPage();
   }
 
   @override
@@ -47,6 +49,8 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     // Accesing to the state of the StateNotifierProvider and listen changes
     final nowPlayingMovies = ref.watch( nowPlayingMoviesProvider );
     final popularMovies = ref.watch( popularMoviesProvider );
+    final topRatedMovies = ref.watch( topRatedMoviesProvider );
+    final upcomingMovies = ref.watch( upcomingMoviesProvider );
 
     return CustomScrollView(
       slivers: [
@@ -85,11 +89,11 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                   ),
             
                   MovieHorizontalListview( 
-                    movies: nowPlayingMovies,
+                    movies: upcomingMovies,
                     title: 'Proximamente',
                     subTitle: 'En este mes',
                     loadNextPage: () {
-                      ref.read( nowPlayingMoviesProvider.notifier ).loadNextPage();
+                      ref.read( upcomingMoviesProvider.notifier ).loadNextPage();
                     },
                   ),
             
@@ -103,11 +107,11 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                   ),
             
                   MovieHorizontalListview( 
-                    movies: nowPlayingMovies,
+                    movies: topRatedMovies,
                     title: 'Mejor calificadas',
                     subTitle: 'Desde siempre',
                     loadNextPage: () {
-                      ref.read( nowPlayingMoviesProvider.notifier ).loadNextPage();
+                      ref.read( topRatedMoviesProvider.notifier ).loadNextPage();
                     },
                   ),
                   
