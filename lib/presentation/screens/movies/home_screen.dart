@@ -1,8 +1,10 @@
 
+import 'package:flutter/material.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cinemapedia/presentation/providers/movies/movies_providers.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cinemapedia/presentation/widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -40,14 +42,23 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     // Accesing to the state of the StateNotifierProvider and listen changes
     final nowPlayingMovies = ref.watch( nowPlayingMoviesProvider );
 
-    return ListView.builder(
-      itemCount: nowPlayingMovies.length,
-      itemBuilder: (BuildContext context, int index) {
-        final movie = nowPlayingMovies[index];
-        return ListTile(
-          title: Text(movie.title),
-        );
-      },
+    return Column(
+      children: [
+
+        const CustomAppbar(),
+
+        Expanded(
+          child: ListView.builder(
+            itemCount: nowPlayingMovies.length,
+            itemBuilder: (BuildContext context, int index) {
+              final movie = nowPlayingMovies[index];
+              return ListTile(
+                title: Text(movie.title),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
