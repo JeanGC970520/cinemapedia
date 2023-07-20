@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/movies/movies_repository_provider.dart';
 
+// Syntax of StateNotifierProvider => StateNotifierProvider<Notifier<T>, T>()
+// When T is the state type
 final nowPlayingMoviesProvider = StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
   
   final fetchMoreMovies = ref.watch( movieRepositoryProvider ).getNowPLaying;
