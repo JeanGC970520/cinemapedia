@@ -26,6 +26,26 @@ final popularMoviesProvider = StateNotifierProvider<MoviesNotifier, List<Movie>>
   );
 });
 
+final topRatedMoviesProvider = StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
+  
+  final fetchMoreMovies = ref.watch( movieRepositoryProvider ).getTopRated;
+  
+  return MoviesNotifier(
+    fetchMoreMovies: fetchMoreMovies
+  );
+});
+
+final upcomingMoviesProvider = StateNotifierProvider<MoviesNotifier, List<Movie>>((ref) {
+  
+  final fetchMoreMovies = ref.watch( movieRepositoryProvider ).getUpcoming;
+  
+  return MoviesNotifier(
+    fetchMoreMovies: fetchMoreMovies
+  );
+});
+
+
+
 // Defining function signature
 typedef MovieCallback = Future<List<Movie>> Function({ int page });
 
