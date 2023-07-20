@@ -79,7 +79,7 @@ class _Slide extends StatelessWidget {
                   
                   if( loadingProgress != null ) {
                     return const Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(20),
                       child: Center(
                         child: CircularProgressIndicator(strokeWidth: 2.0,),
                       ),
@@ -105,20 +105,24 @@ class _Slide extends StatelessWidget {
           ),
 
           // * Rating
-          Row(
-            children: [
-              Icon( Icons.star_half_outlined, color: Colors.yellow.shade800, ),
-              const SizedBox(width: 3,),
-              Text(
-                '${movie.voteAverage}', 
-                style: textStyles.bodyMedium?.copyWith(color: Colors.yellow.shade800),
-              ),
-              const SizedBox(width: 10,),
-              Text(
-                HumanFortmats.number(movie.popularity),
-                style: textStyles.bodySmall,
-              ),
-            ],
+          SizedBox(
+            width: 150,
+            child: Row(
+              children: [
+                Icon( Icons.star_half_outlined, color: Colors.yellow.shade800, ),
+                const SizedBox(width: 3,),
+                Text(
+                  '${movie.voteAverage}', 
+                  style: textStyles.bodyMedium?.copyWith(color: Colors.yellow.shade800),
+                ),
+                // const SizedBox(width: 10,),
+                const Spacer(),
+                Text(
+                  HumanFortmats.number(movie.popularity),
+                  style: textStyles.bodySmall,
+                ),
+              ],
+            ),
           )
         ],
       ),
