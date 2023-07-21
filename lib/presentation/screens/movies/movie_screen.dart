@@ -42,8 +42,99 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('MovieID: ${widget.movieId}'),
+      body: CustomScrollView(
+        physics: const ClampingScrollPhysics(),
+        slivers: [
+
+          CustomSliverAppBar( movie: movie, ),
+
+        ],
+      ),
+    );
+  }
+}
+class CustomSliverAppBar extends StatelessWidget {
+  const CustomSliverAppBar({
+    super.key,
+    required this.movie,
+  });
+
+  final Movie movie;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final Size size = MediaQuery.of(context).size;
+
+    return SliverAppBar(
+      backgroundColor: Colors.black,
+      expandedHeight: size.height * 0.7,
+      foregroundColor: Colors.white,
+      flexibleSpace: FlexibleSpaceBar(
+        centerTitle: true,
+        titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        title: Text(
+          movie.title,
+          style: const TextStyle(fontSize: 20),
+          textAlign: TextAlign.start,
+        ),
+        background: Stack(
+          children: [
+
+            SizedBox.expand(
+              child: Image.network(
+                movie.posterPath,
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            const _Gradient(stops: [0.7, 1.0],),
+
+            const _Gradient(
+              colors: [
+                Colors.black45,
+                Colors.transparent
+              ],
+              stops: [0, 0.2],
+              begin: Alignment.topLeft,
+              end: Alignment.centerRight,
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Gradient extends StatelessWidget {
+  const _Gradient({
+    this.stops,
+    this.colors = const [
+      Colors.transparent,
+      Colors.black87,
+    ],
+    this.begin = Alignment.topCenter,
+    this.end = Alignment.bottomCenter
+  });
+
+  final List<double>? stops;
+  final List<Color> colors;
+  final AlignmentGeometry begin;
+  final AlignmentGeometry end;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: colors,
+            stops: stops,
+            begin: begin,
+            end: end,
+          ),
+        ),
       ),
     );
   }
