@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/entities/movie.dart';
-import 'package:cinemapedia/presentation/providers/movies/movie_info_provider.dart';
+import 'package:cinemapedia/presentation/providers/providers.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
 
@@ -28,6 +28,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
     super.initState();
     // Calling method to request movie by id if it is not in cache
     ref.read( movieInfoProvider.notifier ).loadMovie(widget.movieId);
+    ref.read( actorsByMovieProvider.notifier ).loadActors(widget.movieId);
   }
 
   @override
@@ -127,14 +128,75 @@ class _MovieDetails extends StatelessWidget {
           ),
         ),
 
-        // TODO: Display actors on Listview
+        _ActorsByMovie(movieId: movie.id.toString()),
         
-        const SizedBox(height: 100,),
+        const SizedBox(height: 50,),
       ],
     );
   }
 }
 
+
+class _ActorsByMovie extends ConsumerWidget {
+
+  const _ActorsByMovie({required this.movieId});
+
+  final String movieId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    final actors = ref.watch( actorsByMovieProvider )[movieId];
+
+    if( actors == null ) {
+      return const CircularProgressIndicator(strokeWidth: 2.0,);
+    }
+
+    return SizedBox(
+      height: 300,
+      child: ListView.builder(
+        itemCount: actors.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext context, int index) {
+
+          final actor = actors[index];
+
+          return Container(
+            padding: const EdgeInsets.all(8.0),
+            width: 135,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                // Actor photo
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
+                    actor.profilePath,
+                    height: 180,
+                    width: 135,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                // Name
+                const SizedBox(height: 5,),
+
+                Text(actor.name, maxLines: 2,),
+                Text(
+                  actor.character ?? '', 
+                  maxLines: 2,
+                  style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis ),
+                ),
+
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
 
 class CustomSliverAppBar extends StatelessWidget {
   const CustomSliverAppBar({
@@ -154,13 +216,13 @@ class CustomSliverAppBar extends StatelessWidget {
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
       flexibleSpace: FlexibleSpaceBar(
-        centerTitle: true,
-        titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        title: Text(
-          movie.title,
-          style: const TextStyle(fontSize: 20),
-          textAlign: TextAlign.start,
-        ),
+        // centerTitle: true,
+        // titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        // title: Text(
+        //   movie.title,
+        //   style: const TextStyle(fontSize: 20),
+        //   textAlign: TextAlign.start,
+        // ),
         background: Stack(
           children: [
 
