@@ -130,7 +130,7 @@ class BelongsToCollection {
         id: json["id"],
         name: json["name"],
         posterPath: json["poster_path"],
-        backdropPath: json["backdrop_path"],
+        backdropPath: json["backdrop_path"] ?? '',
     );
 
     Map<String, dynamic> toMap() => {
@@ -176,7 +176,7 @@ class ProductionCompany {
 
     factory ProductionCompany.fromMap(Map<String, dynamic> json) => ProductionCompany(
         id: json["id"],
-        logoPath: json["logo_path"],
+        logoPath: json["logo_path"] ?? '',
         name: json["name"],
         originCountry: json["origin_country"],
     );
