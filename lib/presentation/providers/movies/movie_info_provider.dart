@@ -43,7 +43,7 @@ class MovieMapNotifier extends StateNotifier<Map<String,Movie>> {
 
     // If the movie info is in cache, not requesting it
     if( state[movieId] != null ) return;
-    print('Realizando peticion HTTP');
+    // print('Realizando peticion HTTP');
     final movie = await getMovie( movieId );
 
     state = { ...state, movieId : movie };
