@@ -22,6 +22,15 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   // Timer to do a manual debounce
   Timer? _debounceTimer;
 
+  void clearStreams() {
+    debouncedMovies.close();
+    // Must be canceled because when its being opened the search delegate,
+    // its excecuted the buildSuggestions and inside is calling _onQueryChanged,
+    // so the Timer is initializated and when close the search delegate, the
+    // Timer be running.
+    _debounceTimer?.cancel();
+  }
+
   void _onQueryChanged( String query ) {
     // * NOTE: The functionality is, when the user writes a word,
     // *       canceling the Timer if its active. Then init the Timer
@@ -32,9 +41,17 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     if( _debounceTimer?.isActive ?? false ) _debounceTimer!.cancel();
 
     _debounceTimer = Timer(
-      const Duration( milliseconds: 500 ), () {
+      const Duration( milliseconds: 500 ), () async {
         // print('Searching movies');
         // Search movies and emit the stream with them.
+        if( query.isEmpty )  {
+          debouncedMovies.add([]);
+          return;
+        }
+
+        final movies = await searchMovies(query);
+        debouncedMovies.add(movies);
+
       }
     );
 
@@ -64,7 +81,10 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-      onPressed: () => close(context, null), 
+      onPressed: () {
+        clearStreams();
+        close(context, null);
+      }, 
       icon: const Icon( Icons.arrow_back_ios_new_rounded )
     );
   }
@@ -94,7 +114,10 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
           itemBuilder: (BuildContext context, int index) {
             return _MovieSearchItem(
               movie: movies[index],
-              onMovieSelected: close,
+              onMovieSelected: ( context, movie ) {
+                clearStreams();
+                close(context, movie);
+              },
             );
           },
         );
