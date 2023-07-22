@@ -46,11 +46,6 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
       const Duration( milliseconds: 500 ), () async {
         // print('Searching movies');
         // Search movies and emit the stream with them.
-        if( query.isEmpty )  {
-          debouncedMovies.add([]);
-          return;
-        }
-
         final movies = await searchMovies(query);
         debouncedMovies.add(movies);
 
