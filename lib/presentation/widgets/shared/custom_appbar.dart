@@ -39,14 +39,14 @@ class CustomAppbar extends ConsumerWidget {
                   // final movieRepository = ref.read( movieRepositoryProvider );
                   // * Now replace the movieRepository with searchedMoviesProvider to fetch and 
                   // * mantein the searched movies with the search delegate.
-                  // TODO:
-                  // final searchedMovies = ref.read( searchedMoviesProvider );
+                  final searchedMovies = ref.read( searchedMoviesProvider );
                   final searchQuery = ref.read( searchQueryProvider );
 
                   showSearch<Movie?>(
                     query: searchQuery,
                     context: context, 
                     delegate: SearchMovieDelegate(
+                      initialMovies: searchedMovies,
                       searchMovies: ref.read( searchedMoviesProvider.notifier ).searchMoviesByQuery,
                     ),
                   ).then((movie) {
