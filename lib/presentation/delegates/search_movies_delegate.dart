@@ -14,9 +14,11 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
   SearchMovieDelegate({
     required this.searchMovies,
+    required this.initialMovies,
   });
 
-  SearchMoviesCallback searchMovies;
+  final SearchMoviesCallback searchMovies;
+  final List<Movie> initialMovies;
   // This stream can listen it to more than once
   StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
   // Timer to do a manual debounce
@@ -100,9 +102,8 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     _onQueryChanged(query);
 
     return StreamBuilder(
-      // future: searchMovies(query),
+      initialData: initialMovies,
       stream: debouncedMovies.stream,
-      // initialData: const <Movie>[],
       builder: (context, snapshot) {
 
         //! print('Doing request');
