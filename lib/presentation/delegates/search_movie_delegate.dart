@@ -5,7 +5,15 @@ import 'package:animate_do/animate_do.dart';
 
 import '../../domain/entities/movie.dart';
 
+typedef SearchMoviesCallback = Future<List<Movie>> Function( String query, { int page } ); 
+
 class SearchMovieDelegate extends SearchDelegate<Movie?> {
+
+  SearchMovieDelegate({
+    required this.searchMovies,
+  });
+
+  SearchMoviesCallback searchMovies;
 
   @override
   String get searchFieldLabel => 'Buscar pelicula';
@@ -43,7 +51,24 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return const Text('build suggestions');
+    return FutureBuilder(
+      future: searchMovies(query),
+      // initialData: const <Movie>[],
+      builder: (context, snapshot) {
+
+        final movies = snapshot.data ?? [];
+
+        return ListView.builder(
+          itemCount: movies.length,
+          itemBuilder: (BuildContext context, int index) {
+            final movie = movies[index];
+            return ListTile(
+              title: Text(movie.title),
+            );
+          },
+        );
+      },
+    );
   }
 
 }
