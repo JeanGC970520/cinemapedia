@@ -18,7 +18,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   });
 
   final SearchMoviesCallback searchMovies;
-  final List<Movie> initialMovies;
+  List<Movie> initialMovies;
   // This stream can listen it to more than once
   StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
   // Timer to do a manual debounce
@@ -47,12 +47,37 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
         // print('Searching movies');
         // Search movies and emit the stream with them.
         final movies = await searchMovies(query);
+        initialMovies = movies;
         debouncedMovies.add(movies);
 
       }
     );
 
   }
+
+  Widget buildResultsAndSuggestions() {
+    return StreamBuilder(
+      initialData: initialMovies,
+      stream: debouncedMovies.stream,
+      builder: (context, snapshot) {
+
+        final movies = snapshot.data ?? [];
+        return ListView.builder(
+          itemCount: movies.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _MovieSearchItem(
+              movie: movies[index],
+              onMovieSelected: ( context, movie ) {
+                clearStreams();
+                close(context, movie);
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
 
   @override
   String get searchFieldLabel => 'Buscar pelicula';
@@ -88,7 +113,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return const Text('build results');
+    return buildResultsAndSuggestions();
   }
 
   @override
@@ -96,29 +121,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
     _onQueryChanged(query);
 
-    return StreamBuilder(
-      initialData: initialMovies,
-      stream: debouncedMovies.stream,
-      builder: (context, snapshot) {
-
-        //! print('Doing request');
-
-        final movies = snapshot.data ?? [];
-
-        return ListView.builder(
-          itemCount: movies.length,
-          itemBuilder: (BuildContext context, int index) {
-            return _MovieSearchItem(
-              movie: movies[index],
-              onMovieSelected: ( context, movie ) {
-                clearStreams();
-                close(context, movie);
-              },
-            );
-          },
-        );
-      },
-    );
+    return buildResultsAndSuggestions();
   }
 
 }
