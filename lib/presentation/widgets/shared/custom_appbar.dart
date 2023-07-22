@@ -48,7 +48,7 @@ class CustomAppbar extends ConsumerWidget {
 
                     context.push('/movie/${movie.id}');
                   });
-                  // * NOTE: Use then() to sdo something before the 
+                  // * NOTE: Use then() to do something after the 
                   // * future finished. So I can use the context and the Movie instance.
                   // * I haven't to use async function. 
 
