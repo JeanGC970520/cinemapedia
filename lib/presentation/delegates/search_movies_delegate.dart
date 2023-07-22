@@ -23,6 +23,9 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
   // Timer to do a manual debounce
   Timer? _debounceTimer;
+  // To manage action's icons
+  StreamController<bool> isLoadingStreamCtrl = StreamController.broadcast();
+
 
   void clearStreams() {
     debouncedMovies.close();
@@ -39,7 +42,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     // *       again and if pass 500 milliseconds without a user writes,
     // *       request the data.
     // print('Query String changed: $query');
-
+    isLoadingStreamCtrl.add(true);
     if( _debounceTimer?.isActive ?? false ) _debounceTimer!.cancel();
 
     _debounceTimer = Timer(
@@ -47,6 +50,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
         // print('Searching movies');
         // Search movies and emit the stream with them.
         final movies = await searchMovies(query);
+        isLoadingStreamCtrl.add(false);
         initialMovies = movies;
         debouncedMovies.add(movies);
 
@@ -88,13 +92,33 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     // print('query: $query');
 
     return [
-      
-      FadeIn(
-        animate: query.isNotEmpty,
-        child: IconButton(
-          onPressed: () => query = '',
-          icon: const Icon( Icons.clear_rounded ),
-        ),
+
+      StreamBuilder(
+        initialData: false,
+        stream: isLoadingStreamCtrl.stream,
+        builder: (context, snapshot) {
+          
+          final isLoading = snapshot.data ?? false;
+
+          return isLoading 
+            ? SpinPerfect(
+              spins: 10,
+              infinite:  true,
+              duration: const Duration(seconds: 20),
+              child: IconButton(
+                onPressed: () => query = '',
+                icon: const Icon( Icons.refresh_rounded ),
+              ),
+            )
+            : FadeIn(
+              animate: query.isNotEmpty,
+              child: IconButton(
+                onPressed: () => query = '',
+                icon: const Icon( Icons.clear_rounded ),
+              ),
+            );
+
+        },
       ),
     
     ];
