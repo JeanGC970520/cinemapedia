@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
@@ -15,6 +17,28 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   });
 
   SearchMoviesCallback searchMovies;
+  // This stream can listen it to more than once
+  StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
+  // Timer to do a manual debounce
+  Timer? _debounceTimer;
+
+  void _onQueryChanged( String query ) {
+    // * NOTE: The functionality is, when the user writes a word,
+    // *       canceling the Timer if its active. Then init the Timer
+    // *       again and if pass 500 milliseconds without a user writes,
+    // *       request the data.
+    // print('Query String changed: $query');
+
+    if( _debounceTimer?.isActive ?? false ) _debounceTimer!.cancel();
+
+    _debounceTimer = Timer(
+      const Duration( milliseconds: 500 ), () {
+        // print('Searching movies');
+        // Search movies and emit the stream with them.
+      }
+    );
+
+  }
 
   @override
   String get searchFieldLabel => 'Buscar pelicula';
@@ -52,10 +76,16 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return FutureBuilder(
-      future: searchMovies(query),
+
+    _onQueryChanged(query);
+
+    return StreamBuilder(
+      // future: searchMovies(query),
+      stream: debouncedMovies.stream,
       // initialData: const <Movie>[],
       builder: (context, snapshot) {
+
+        //! print('Doing request');
 
         final movies = snapshot.data ?? [];
 
