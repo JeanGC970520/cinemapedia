@@ -7,14 +7,29 @@ import '../../views/views.dart';
 
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+    required this.pageIndex,
+  });
+
+  final int pageIndex;
+
+  final viewRoutes = const <Widget> [
+    HomeView(),
+    CategoriesView(),
+    FavoritesView(),
+  ];
 
   static const name = "home-screen";
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: HomeView(),
+    return Scaffold(
+      // * NOTE: IndexedStack preserves the state
+      body: IndexedStack(
+        index: pageIndex,
+        children: viewRoutes
+      ),
       bottomNavigationBar: CustomBottomNavigation(),
     );
   }
