@@ -42,7 +42,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     // *       again and if pass 500 milliseconds without a user writes,
     // *       request the data.
     // print('Query String changed: $query');
-    isLoadingStreamCtrl.add(true);
+    if( query.isNotEmpty ) isLoadingStreamCtrl.add(true);
     if( _debounceTimer?.isActive ?? false ) _debounceTimer!.cancel();
 
     _debounceTimer = Timer(
