@@ -4,13 +4,16 @@ import 'package:go_router/go_router.dart';
 import 'package:cinemapedia/presentation/screens/screens.dart'; 
 
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/home/0',
   routes: [
 
     GoRoute(
-      path: '/',
+      path: '/home/:page', //Add an argument to recive the tap selected on the bottom nav bar.
       name: HomeScreen.name,
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) {
+        final pageIndex = state.pathParameters['page'] ?? '0';
+        return HomeScreen( pageIndex: int.parse(pageIndex), );
+      },
       // * NOTES: 
       // *  - routes are the children routes of a route. 
       // *  - This is useful with deeplinking implementation.
