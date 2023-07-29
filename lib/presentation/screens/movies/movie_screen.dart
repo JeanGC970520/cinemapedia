@@ -218,6 +218,17 @@ class CustomSliverAppBar extends StatelessWidget {
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7,
       foregroundColor: Colors.white,
+      actions: [
+
+        IconButton(
+          onPressed: () {
+            // TODO: Make the toggle
+          },
+          icon: const Icon( Icons.favorite_border ),
+          // icon: const Icon( Icons.favorite_rounded, color: Colors.red, ),
+        ),
+
+      ],
       flexibleSpace: FlexibleSpaceBar(
         // centerTitle: true,
         // titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -243,16 +254,25 @@ class CustomSliverAppBar extends StatelessWidget {
               ),
             ),
 
-            const _Gradient(stops: [0.7, 1.0],),
-
+            // Bottom gradient
             const _Gradient(
+              stops: [0.8, 1.0],
               colors: [
+                Colors.transparent,
                 Colors.black45,
-                Colors.transparent
               ],
-              stops: [0, 0.2],
+            ),
+            
+            // Top left gradient
+            const _Gradient(
               begin: Alignment.topLeft,
               end: Alignment.centerRight,
+            ),
+
+            // Top right gradient
+            const _Gradient(
+              begin: Alignment.topRight,
+              end: Alignment.centerLeft,
             ),
 
           ],
@@ -264,16 +284,16 @@ class CustomSliverAppBar extends StatelessWidget {
 
 class _Gradient extends StatelessWidget {
   const _Gradient({
-    this.stops,
+    this.stops = const [0, 0.2],
     this.colors = const [
-      Colors.transparent,
-      Colors.black87,
+      Colors.black45,
+      Colors.transparent
     ],
     this.begin = Alignment.topCenter,
     this.end = Alignment.bottomCenter
   });
 
-  final List<double>? stops;
+  final List<double> stops;
   final List<Color> colors;
   final AlignmentGeometry begin;
   final AlignmentGeometry end;
