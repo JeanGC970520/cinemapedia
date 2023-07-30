@@ -201,6 +201,12 @@ class _ActorsByMovie extends ConsumerWidget {
   }
 }
 
+// * Future Provider of Riverpod
+final isFavoriteProvider = FutureProvider.family.autoDispose((ref, int movieId) {
+  final localStorageRepository = ref.watch( localStorageRepositoryProvider );
+  return localStorageRepository.isFavoriteMovie(movieId);
+});
+
 class CustomSliverAppBar extends ConsumerWidget {
   const CustomSliverAppBar({
     super.key,
@@ -211,6 +217,8 @@ class CustomSliverAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    final isFavoriteFuture = ref.watch( isFavoriteProvider(movie.id) );
 
     final Size size = MediaQuery.of(context).size;
 
@@ -224,9 +232,18 @@ class CustomSliverAppBar extends ConsumerWidget {
           onPressed: () {
             ref.watch( localStorageRepositoryProvider )
               .toggleFavorite( movie );
+
+            // * IMPORTANT: 
+            // * Invalidate state of any provider and return it to its initial state
+            ref.invalidate( isFavoriteProvider(movie.id) );
           },
-          icon: const Icon( Icons.favorite_border ),
-          // icon: const Icon( Icons.favorite_rounded, color: Colors.red, ),
+          icon: isFavoriteFuture.when(
+            loading: () =>  const Icon( Icons.favorite_border ),
+            data: (isFavorite) => isFavorite
+              ? const Icon( Icons.favorite_rounded, color: Colors.red, )
+              : const Icon( Icons.favorite_border ),
+            error: (error, stackTrace) => throw UnimplementedError(),
+          ),
         ),
 
       ],
